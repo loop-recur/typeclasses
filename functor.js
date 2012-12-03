@@ -20,11 +20,6 @@ Functor(Function, {
   fmap: function(f){ return compose(this, f); }
 });
 
-//+ falsy :: a -> Bool
-var falsy = function(val) {
-  return (val != '' && val != 0 && !val);
-}
-
 Functor(Maybe, {
   fmap: function(f) {
     if(falsy(this.val)) return this;

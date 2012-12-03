@@ -1,12 +1,23 @@
 Monad = function(type, defs) {
+  var mbindViaJoin = function(f, mv) {
+    return mjoin(mv.fmap(f));
+  }.autoCurry();
+  
+  var joinViaMbind = function(mmv) { return mmv.mbind(id); }
+  
   type.prototype.mresult = defs.mresult;
-  type.prototype.mbind = defs.mbind.autoCurry();
+  type.prototype.mbind = (defs.mbind && defs.mbind.autoCurry()) || mbindViaJoin;
+  type.prototype.mjoin = defs.mjoin || joinViaMbind;
+}
+
+mjoin = function(mmv) {
+  return mmv.mjoin();
 }
 
 mbind = function(mv, f) {
   f.mresult = mv.mresult;
-  return mv.mbind(f);
-}
+  return mv.mbind(f, mv);
+}.autoCurry();
 
 ap = function(mf, m) {
   return mbind(mf, function(f){
@@ -16,6 +27,7 @@ ap = function(mf, m) {
   })
 }.autoCurry();
 
+//+ mcompose :: (b -> m c) -> (a -> m b) -> (a -> m c)
 mcompose = function(f, g) {
   return function(x) {
     return mbind(g(x), f);
@@ -52,47 +64,13 @@ liftM = function(f) {
   return f.curried ? _liftApplicative(f) : _liftFunctor(f);
 }
 
-var _lines = split('\n');
-
-var _getToken = compose(map(compose(replace(/;$/, ''), strip)), split("<-"), last, split('\t'));
-
-var _tokenize = compose(map(_getToken), match(/\s?(.*?)\s+<-\s+(.*);?/g));
-
-var _secondTolastLine = function(xs) { return xs[xs.length - 2]; }
-
-var _lastLine = compose(replace(/;$/, ""), replace(/return/, ""), _secondTolastLine, _lines);
-
-var _getArgNames = compose(filter('x'), map(strip), split(','), last, match(/\((.*)\)/), first, _lines);
-
-var runMonad = function(fun) {
-	var monad = function() {
-		var string_fun = fun.toString();
-		var tokens = _tokenize(string_fun);
-		var resultFun = _lastLine(string_fun);
-		var arg_names = _getArgNames(string_fun);
-		
-		var builder = function(str, tuple) {
-			var new_str;
-			var v = tuple[0];
-			var mv = tuple[1];
-	
-			if(tuple == tokens[tokens.length-1]) {
-				new_str = str + mv + ", function("+v+") {\n return this.mresult("+resultFun+")";
-				new_str = reduce("x + '\\n});'", new_str, repeat(1, tokens.length));
-				return new Function(arg_names, new_str);
-			}
-			
-			new_str = str + mv + ", function("+v+") {\n return mbind(";
-			return builder(new_str, tokens[tokens.indexOf(tuple)+1]);
-		}
-		
-		return builder("return mbind(", first(tokens));
-	}
-	
-	return monad;
-}
 
 
-doMonad = function(f) {
-  return runMonad(f)();
-}
+// Built ins
+
+Monad(Maybe, {
+  mjoin: function() {
+    return falsy(this.val) ? Maybe(null) : this.val;
+  },
+  mresult: function(x){ return Maybe(x); }
+});

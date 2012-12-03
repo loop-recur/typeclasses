@@ -11,6 +11,10 @@ isObj = function(obj) {
 	return (typeof obj == "object" && !isArray(obj));
 }
 
+falsy = function(val) {
+  return (val != '' && val != 0 && !val);
+}
+
 nTimes = function(times, fun) {
 	var result = [];
 	for(var i=0;i<times;i++ ){ result = cons(fun(), result); }
