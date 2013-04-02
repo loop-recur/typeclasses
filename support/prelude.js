@@ -1,3 +1,9 @@
+uncurry = function(f) {
+  return function(){
+    return f.apply(f, arguments[0]);
+  }
+}
+
 // Helpers
 argsToList = function(x){
 	return Array.prototype.slice.call(x);

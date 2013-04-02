@@ -43,7 +43,7 @@ Monoid(Boolean, {
 });
 
 Monoid(Function, {
-  mempty: K(id),
+  mempty: K(K({mappend: function(f, g) { return mappend(g.mempty(), g);} })),
   mappend: function(f,g){
     return function() {
       return mappend(f.apply(this, arguments),

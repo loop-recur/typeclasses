@@ -27,10 +27,16 @@ ap = function(mf, m) {
   })
 }.autoCurry();
 
-//+ mcompose :: (b -> m c) -> (a -> m b) -> (a -> m c)
-mcompose = function(f, g) {
-  return function(x) {
-    return mbind(g(x), f);
+// takes variable args like compose does though.
+//+ _mcompose :: (b -> m c) -> (a -> m b) -> (a -> m c)
+mcompose = function(){
+  var fns= map(Function.toFunction,arguments),
+      arglen=fns.length;
+  return function() {
+    var restlen = arglen-1;
+    arguments = [fns[arglen-1].apply(this, arguments)];
+    for(var i=restlen;--i>=0;) arguments = [arguments[0].mbind(fns[i], arguments[0])];
+    return arguments[0];
   }
 }
 

@@ -17,7 +17,7 @@ Functor(Array, {
 });
 
 Functor(Function, {
-  fmap: function(f){ return compose(this, f); }
+  fmap: function(f){ return compose(f, this); }
 });
 
 Functor(Maybe, {

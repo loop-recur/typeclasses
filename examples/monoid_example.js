@@ -49,51 +49,71 @@ Monoid(Maybe, {
   }
 });
 
-console.log('default number:');
-var r = mconcat(1, 2, 3, 4, 5);
-console.log(r);
+console.log("start function");
 
-console.log('default array:');
-var r = mconcat([1,2,3], [4,5]);
-console.log(r);
+var getFirstName = function(x){
+  return x.first_name;
+}
+var getMiddleName = function(x){
+  return x.middle_name;
+}
+var getLastName = function(x){
+  return x.last_name;
+}
 
-console.log('default boolean:')
-var r = mconcat(false, false, true);
-console.log(r);
+var r = mconcat(getFirstName, getMiddleName, getLastName);
 
-console.log('default object:')
-var r = mconcat({a: 1, b:"4"}, {a: 3, b:"5", c:3});
-console.log(r);
+var result = r({first_name: false,
+                middle_name: false,
+                last_name: true});
 
-console.log('default function:');
-var f = mappend(test(/^a/i), test(/y$/i));
-var r = filter(f, ["Adam", "Bo", "Jenny", "Frank"]);
-console.log(r);
-
-console.log("Maybe Sum:");
-var r = mconcat(Maybe(Sum(3)), Maybe(Sum(4)), Maybe(Sum(4)));
-console.log(r);
-
-console.log("Maybe:");
-var r = mconcat(Maybe(null), Maybe(3));
-console.log(r);
-
-console.log("Sum:")
-var r = mconcat(Sum(1), Sum(2));
-console.log(r);
-
-console.log("product:")
-var r = mappend(Product(1),Product(2));
-console.log(r);
-
-console.log("All:")
-var r = mconcat(All(true),All(false));
-console.log(r);
-
-console.log('Any:')
-var r = mconcat(Any(false),Any(true));
-console.log(r);
-
-console.log('Min:')
-var r = mconcat(Min(11), Min(13), Min(4), Min(5));
-console.log(r);
+console.log('result is', result);
+// 
+// console.log('default number:');
+// var r = mconcat(1, 2, 3, 4, 5);
+// console.log(r);
+// 
+// console.log('default array:');
+// var r = mconcat([1,2,3], [4,5]);
+// console.log(r);
+// 
+// console.log('default boolean:')
+// var r = mconcat(false, false, true);
+// console.log(r);
+// 
+// console.log('default object:')
+// var r = mconcat({a: 1, b:"4"}, {a: 3, b:"5", c:3});
+// console.log(r);
+// 
+// console.log('default function:');
+// var f = mappend(test(/^a/i), test(/y$/i));
+// var r = filter(f, ["Adam", "Bo", "Jenny", "Frank"]);
+// console.log(r);
+// 
+// console.log("Maybe Sum:");
+// var r = mconcat(Maybe(Sum(3)), Maybe(Sum(4)), Maybe(Sum(4)));
+// console.log(r);
+// 
+// console.log("Maybe:");
+// var r = mconcat(Maybe(null), Maybe(3));
+// console.log(r);
+// 
+// console.log("Sum:")
+// var r = mconcat(Sum(1), Sum(2));
+// console.log(r);
+// 
+// console.log("product:")
+// var r = mappend(Product(1),Product(2));
+// console.log(r);
+// 
+// console.log("All:")
+// var r = mconcat(All(true),All(false));
+// console.log(r);
+// 
+// console.log('Any:')
+// var r = mconcat(Any(false),Any(true));
+// console.log(r);
+// 
+// console.log('Min:')
+// var r = mconcat(Min(11), Min(13), Min(4), Min(5));
+// console.log(r);

@@ -37,7 +37,7 @@
 
 
 // set timeout works for titanium env, which i'm typically in.  Switch with different strategies if needed.
-compose_p=function(){
+parallel = function(){
 	var fns = map(Function.toFunction,arguments)
 	, arglen = fns.length;
 	
@@ -67,10 +67,27 @@ memoize = function( fn ) {
     };  
 }
 
+compose = function() {
+  var fns = map(Function.toFunction,arguments),
+      arglen = fns.length;
+      
+  return function(){
+    for(var i=arglen;--i>=0;) {
+      var fn = fns[i]
+        , args = fn.length ? Array.prototype.slice.call(arguments, 0, fn.length) : arguments
+        , next_args = Array.prototype.slice.call(arguments, (fn.length || 1)); //not right with *args
+      next_args.unshift(fn.apply(this,args));
+      arguments = next_args;
+    }
+    return arguments[0];
+  }
+}
+
+
 typeof window=='undefined'&&(window={});var Functional=window.Functional||{};Functional.install=function(except){var source=Functional,target=window;for(var name in source)
 name=='install'||name.charAt(0)=='_'||except&&name in except||{}[name]||(target[name]=source[name]);}
-compose=function(){var fns=map(Function.toFunction,arguments),arglen=fns.length;return function(){for(var i=arglen;--i>=0;)
-arguments=[fns[i].apply(this,arguments)];return arguments[0];}}
+// compose=function(){var fns=map(Function.toFunction,arguments),arglen=fns.length;return function(){for(var i=arglen;--i>=0;)
+// arguments=[fns[i].apply(this,arguments)];return arguments[0];}}
 composel=function(){ var args=Array.slice(arguments,1).reverse(); compose.apply(args); }
 sequence=function(){var fns=map(Function.toFunction,arguments),arglen=fns.length;return function(){for(var i=0;i<arglen;i++)
 arguments=[fns[i].apply(this,arguments)];return arguments[0];}}
@@ -152,5 +169,3 @@ Function.toFunction=function(value){return value.toFunction();}
 String.prototype.ECMAsplit=('ab'.split(/a*/).length>1?String.prototype.split:function(separator,limit){if(typeof limit!='undefined')
 throw"ECMAsplit: limit is unimplemented";var result=this.split.apply(this,arguments),re=RegExp(separator),savedIndex=re.lastIndex,match=re.exec(this);if(match&&match.index==0)
 result.unshift('');re.lastIndex=savedIndex;return result;});
-$C = compose;
-$C_p = compose_p;
