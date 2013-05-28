@@ -33,3 +33,11 @@ Functor(Either, {
     return Either(this.left, f(this.right));
   }
 });
+
+Functor(ZipList, {
+  fmap: function(f) {
+    return ZipList(this.val.map(function(x){
+      return f(x);
+    }));
+  }
+});

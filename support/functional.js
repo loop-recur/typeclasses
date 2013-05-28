@@ -27,6 +27,7 @@
          };
          f.toString = function(){ return fn.toString(); };
          f.curried = true;
+         f.arity = fn.length;
          return f;
      };
      

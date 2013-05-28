@@ -49,7 +49,12 @@ newType = function(superclass, name) {
 // Some default types
 
 Maybe = makeType();
+
 Either = Constructor(function(left, right){
   this.left = left;
   this.right = right;
+});
+
+ZipList = Constructor(function(xs){
+  this.val = (xs && xs.constructor == Array) ? xs : [].slice.apply(arguments); // to call like ZipList(1,2,3) or ZipList([1,2,3])
 });
