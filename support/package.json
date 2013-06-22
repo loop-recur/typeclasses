@@ -1,0 +1,25 @@
+{ 
+  "name": "xmod",
+  "description": "A collection of helper functions for exporting/exposing JavaScript modules to different environments",
+  "version": "0.1.0",
+  "author": "loop/recur <info@looprecur.com>",
+  "maintainers": [
+    "Brian Lonsdorf <brian@looprecur.com>",
+    "Ryan Charette <ryan@looprecur.com>",
+    "Eric Schmitt <eric.schmitt@looprecur.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/eschmitt/xmod.git"
+  },
+  "devDependencies": {
+    "jasmine-node": "*"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "jasmine-node --coffee specs"
+  },
+  "main": "./xmod.js"
+}

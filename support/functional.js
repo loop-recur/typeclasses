@@ -10,7 +10,7 @@
              return fn.apply(this, args.concat(toArray(arguments)));
          };
          return f;
-     };
+      };
 
   var autoCurry = function (fn, numArgs) {
          numArgs = numArgs || fn.length;

@@ -117,3 +117,22 @@ console.log(r);
 console.log('Min:')
 var r = mconcat(Min(11), Min(13), Min(4), Min(5));
 console.log(r);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
