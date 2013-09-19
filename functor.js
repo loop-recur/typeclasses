@@ -29,7 +29,7 @@ Functor(Maybe, {
 
 Functor(Either, {
   fmap: function(f) {
-    if(falsy(this.right)) return Either(f(this.left), this.right);
+    if(falsy(this.right)) return this;
     return Either(this.left, f(this.right));
   }
 });
