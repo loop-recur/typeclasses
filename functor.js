@@ -24,6 +24,12 @@
     });
   }
 
+Functor(Either, {
+  fmap: function(f) {
+    if(falsy(this.right)) return this;
+    return Either(this.left, f(this.right));
+  }
+});
 
   // Attach references to helper functions and then export the module
   functor.expose = function(){ xmod.expose(window, functor) };
