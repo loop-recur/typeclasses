@@ -1,3 +1,5 @@
+// require("./prelude");
+
 _getGlobal = function() {
   return (typeof global == 'object') ? global : this;
 }
@@ -15,7 +17,7 @@ _superInspect = function(name) {
 }
 
 Constructor = function(f) {
-  var x = function(){
+  var x = function(val){
     if(!(this instanceof x)){
       var inst = new x();
       f.apply(inst, arguments);
@@ -26,12 +28,21 @@ Constructor = function(f) {
   return x;
 }
 
-makeType = function(f) {
-  f = f || function(v){ this.val = v; }
-  return Constructor(f);
+makeType = function(name, options) {
+  f = function(v){ this.val = v; }
+  var type = Constructor(f);
+  if(options && options.deriving) {
+    options.deriving.map(function(typeclass){
+      typeclass.generic(type)
+    });
+  }
+  
+  type.prototype.inspect = _superInspect(name);
+  return type;
 }
 
-newType = function(superclass, name) {
+
+newType = function(superclass, name, options) {
   var constructr = superclass;
   var x = makeType();
 
@@ -41,20 +52,13 @@ newType = function(superclass, name) {
   x.prototype.toString = function() { return this.val.toString(); }
   x.prototype.inspect = _superInspect(name);
 
+  if(options && options.deriving) {
+    options.deriving.map(function(typeclass){
+      typeclass.generic(x)
+    });
+  }
+
   var globl = _getGlobal();
   globl[name] = x;
   return x;
 }
-
-// Some default types
-
-Maybe = makeType();
-
-Either = Constructor(function(left, right){
-  this.left = left;
-  this.right = right;
-});
-
-ZipList = Constructor(function(xs){
-  this.val = (xs && xs.constructor == Array) ? xs : [].slice.apply(arguments); // to call like ZipList(1,2,3) or ZipList([1,2,3])
-});

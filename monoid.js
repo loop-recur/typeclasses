@@ -2,13 +2,24 @@ mappend = function(x, y) {
   return x.mappend(x, y);
 }
 
+mconcat_ = function(xs) {
+    var f = xs[0].mappend;
+    var e = xs[0].mempty();
+    return xs.reduce(f, e);
+};
+
 mconcat = function() {
-  var xs = Array.prototype.slice.call(arguments);
-  if(xs.length == 1) xs = xs[0]; //skip having to call apply
-  var f = xs[0].mappend;
-  var e = xs[0].mempty();
-  return xs.reduce(f, e);
-}
+    var xs = Array.prototype.slice.call(arguments);
+    return mconcat_.apply(null, xs);
+};
+
+// mconcat = function() {
+//   var xs = Array.prototype.slice.call(arguments);
+//   if(xs.length == 1) xs = xs[0]; //skip having to call apply
+//   var f = xs[0].mappend;
+//   var e = xs[0].mempty();
+//   return xs.reduce(f, e);
+// }
 
 Monoid = function(type, defs) {
   type.prototype.mempty = defs.mempty;

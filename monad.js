@@ -71,12 +71,3 @@ liftM = function(f) {
 }
 
 
-
-// Built ins
-
-Monad(Maybe, {
-  mjoin: function() {
-    return falsy(this.val) ? Maybe(null) : this.val;
-  },
-  mresult: function(x){ return Maybe(x); }
-});

@@ -35,37 +35,3 @@ liftA = function(f) {
 
   return (args.length >= arity) ? f() : f.autoCurry(arity);
 }
-
-Applicative(ZipList, {
-  pure: ZipList, // needs to be infinite to be correct ziplist
-  ap: function(a2) {
-    return ZipList(map(function(f,i){return f(a2.val[i]); }, this.val));
-  }
-});
-
-Applicative(Array, {
-  pure: Array, // needs to be infinate to be correct ziplist
-  ap: function(a2) {
-    return flatten(this.map(function(f){
-      return a2.map(function(a){ return f(a); })
-    }));
-  }
-});
-
-Applicative(Function, {
-  pure: K,
-  ap: function(g){
-    var f = this;
-    return function(x) {
-      return f(x, g(x));
-    }
-  }
-});
-
-Applicative(Maybe, {
-  pure: Maybe,
-  ap: function(m){
-    var f = this.val;
-    return f ? fmap(f, m) : Maybe(null);
-  }
-});
